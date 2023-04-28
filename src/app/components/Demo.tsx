@@ -132,7 +132,6 @@ const Demo = () => {
 
       {/* Display Results */}
       <div className="my-10 max-w-full flex justify-center items-center">
-        {/* {article.summary} */}
         {isFetching ? (
           <>
             <FaSpinner className="w-20 h-20 object-contain" />
