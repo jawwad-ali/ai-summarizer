@@ -1,7 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
 
-import { FaCopy, FaLink, FaSpinner } from "react-icons/fa";
+import {
+  FaCopy,
+  FaLink,
+  FaSpinner,
+  FaCheck,
+} from "react-icons/fa";
 import { AiOutlineSend } from "react-icons/ai";
 
 import { useLazyGetSummaryQuery } from "@/services/article";
@@ -17,6 +22,8 @@ const obj: IArticle = {
 };
 
 const Demo = () => {
+  const [copied, setCopied] = useState("");
+
   // single articles
   const [article, setArticle] = useState<IArticle>(obj);
 
@@ -60,6 +67,16 @@ const Demo = () => {
     }
   };
 
+  // Copy to clipboard
+  const copyToClipboard = async (copyURL: string) => {
+    try {
+      setCopied(copyURL);
+      await navigator.clipboard.writeText(copyURL);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
+  };
+
   return (
     <section className="mt-16 w-full max-w-xl">
       <div className="flex flex-col w-full gap-2">
@@ -67,7 +84,10 @@ const Demo = () => {
           className="relative flex justify-center item-center"
           onSubmit={handleSubmit}
         >
-          <FaLink className="absolute left-0 my-3 ml-3 w-5 text-slate-400" />
+          <FaLink
+            className="absolute left-0 my-3 ml-3 w-5 text-slate-400"
+            // onClick={copyToClipboard()}
+          />
           <input
             type="url"
             placeholder="Enter a URL"
@@ -93,7 +113,14 @@ const Demo = () => {
               className="link_card"
             >
               <div className="copy_btn">
-                <FaCopy className="w-[40%] h-[40%] object-contain text-gray-700" />
+                {copied === item.url ? (
+                  <FaCheck className="w-[40%] h-[40%] object-contain text-gray-700" />
+                ) : (
+                  <FaCopy
+                    className="w-[40%] h-[40%] object-contain text-gray-700"
+                    onClick={() => copyToClipboard(item.url)}
+                  />
+                )}
               </div>
               <p className="flex-1 font-satoshi text-blue-700 text-sm font-medium truncate">
                 {item.url}
